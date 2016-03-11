@@ -1,4 +1,3 @@
 (ns fmaas.configure)
 
-(defn configure-fmaas
-)
+(defn configure-fmaas)

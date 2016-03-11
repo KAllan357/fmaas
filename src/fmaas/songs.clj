@@ -11,7 +11,7 @@
 (defn get-song-name [f] (clojure.string/replace (.getName f) ".mid" ""))
 
 (defn get-song-files [] (filter 
-                         (fn [f] (and (re-matches song-re (.getName f)) (not (.isDirectory f))))
+                         (fn [f] (and (.exists f) (not (.isDirectory f)) (re-matches song-re (.getName f))))
                          (file-seq (io/file songs-dir))))
 
 (defn get-song-details [sf]
@@ -33,26 +33,6 @@
 
 (defn render-error-response [statusCode body]
   {:status statusCode :headers {} :body (str body)})
-
-; I don't think I need all this craft here, but its interesting at least.
-(defprotocol Playable
-  "Playable are things that can be played."
-  (play [x]))
-
-(defn show-playlist [x] (str x "is playing!"))
-
-(defrecord Song [name filePath]
-  Playable
-  (play [x] 
-    (str name " is playing!")))
-
-(defrecord Playlist [name songs]
-  Playable
-  (play [x]
-    (map play songs)))
-
-;(println (play (Song. "Hakuna Mataka" "~/kallan/src/song.mp3")))
-;(println (play (Playlist. "Kyle's Playlist", (list (Song. "Make a Man" "~/kallan/src/song.mp3")))))
 
 (defn get-songs []
   (map get-song-name (get-song-files)))
