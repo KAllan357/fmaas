@@ -1,9 +1,7 @@
-//#include <TimerOne.h>
 #include <SoftwareSerial.h>
 
 #define VS1053_RX  2 // This is the pin that connects to the RX pin on VS1053
 #define VS1053_RESET 9 // This is the pin that connects to the RESET pin on VS1053
-#define RESOLUTION 40 //Microsecond resolution for notes
 
 // See http://www.vlsi.fi/fileadmin/datasheets/vs1053.pdf Pg 31
 #define VS1053_BANK_DEFAULT 0x00
@@ -12,7 +10,7 @@
 #define VS1053_BANK_MELODY 0x79
 
 // See http://www.vlsi.fi/fileadmin/datasheets/vs1053.pdf Pg 32 for more!
-#define VS1053_GM1_OCARINA 80
+#define VS1053_GM1_OCARINA 105
 
 #define MIDI_NOTE_ON  0x90
 #define MIDI_NOTE_OFF 0x80
@@ -23,13 +21,8 @@
 
 SoftwareSerial VS1053_MIDI(0, 2); // TX only, do not use the 'rx' side
 
-//const byte STATUS_BYTE = B10000000; // 128 0x80
-//const byte DATA_BYTE = B01111111; // 127 0x7F
-
 //Setup
 void setup(){  
-  //Timer1.initialize(RESOLUTION); // Set up a timer at the defined resolution
-  //Timer1.attachInterrupt(tick); // Attach the tick function
   Serial.begin(9600);
 
   VS1053_MIDI.begin(31250); // MIDI uses a 'strange baud rate'
@@ -50,20 +43,16 @@ void loop(){
     byte status_byte = Serial.read();
     byte message1 = Serial.read();
 
-    Serial.println("receiving data...");
     if (Serial.peek() < 127) {
-      Serial.println("probably a good message");
        byte message2 = Serial.read();
         // STATUS_BYTE
         if (0x80 >= status_byte || status_byte <= 0x8F) {
-          Serial.println("Found a note off?");
           // Note Off
           uint8_t chan = status_byte & 0x0F;
           uint8_t note = message1 & 0x7F; 
           uint8_t vel = message2 & 0x7F;
           midiNoteOff(chan, note, vel);
         } else if (0x90 >= status_byte || status_byte <= 0x9F) {
-          Serial.println("Found a note on?");
           // Note On
           uint8_t chan = status_byte & 0x0F;
           uint8_t note = message1 & 0x7F;
@@ -131,9 +120,3 @@ void midiSetChannelBank(uint8_t chan, uint8_t bank) {
   VS1053_MIDI.write((uint8_t)MIDI_CHAN_BANK);
   VS1053_MIDI.write(bank);
 }
-
-/*
-Called by the timer interrupt at the specified resolution.
- */
-//void tick() {
-//}

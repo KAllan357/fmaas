@@ -20,7 +20,7 @@
                                     (.write (.getOutputStream connection) (.getMessage message))))))
     (.open sequencer)
     (.start sequencer)
-    (Thread/sleep 10000)
+    (Thread/sleep 50000)
     (.close (.getReceiver transmitter))
     (.close transmitter)
     (.stop sequencer)
