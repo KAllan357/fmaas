@@ -1,4 +1,6 @@
-(ns fmaas.controls)
+(ns fmaas.controls
+  (:require [fmaas.sequencer :as sequencer]
+            [fmaas.songs :as songs]))
 
 (def playing nil)
 
@@ -12,8 +14,9 @@
   (str "status"))
 
 (defn play-handler [req]
-  (println req)
-  (str (slurp (:body req)) " is playing!"))
+  (let [song-files (songs/get-song-files)]
+    ;(println song-files)
+    (sequencer/play-song (first song-files))))
 
 (defn stop-handler [req]
   (str "stop"))

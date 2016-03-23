@@ -50,16 +50,20 @@ void loop(){
     byte status_byte = Serial.read();
     byte message1 = Serial.read();
 
+    Serial.println("receiving data...");
     if (Serial.peek() < 127) {
+      Serial.println("probably a good message");
        byte message2 = Serial.read();
         // STATUS_BYTE
         if (0x80 >= status_byte || status_byte <= 0x8F) {
+          Serial.println("Found a note off?");
           // Note Off
           uint8_t chan = status_byte & 0x0F;
           uint8_t note = message1 & 0x7F; 
           uint8_t vel = message2 & 0x7F;
           midiNoteOff(chan, note, vel);
         } else if (0x90 >= status_byte || status_byte <= 0x9F) {
+          Serial.println("Found a note on?");
           // Note On
           uint8_t chan = status_byte & 0x0F;
           uint8_t note = message1 & 0x7F;
