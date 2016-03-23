@@ -16,10 +16,12 @@
                                   (close [this] 
                                     (.close (.getOutputStream connection))
                                     (.disconnect connection))
-                                  (send [this message timestamp] 
+                                  (send [this message timestamp]
                                     (.write (.getOutputStream connection) (.getMessage message))))))
     (.open sequencer)
     (.start sequencer)
     (Thread/sleep 10000)
+    (.close (.getReceiver transmitter))
+    (.close transmitter)
     (.stop sequencer)
     (.close sequencer)))
