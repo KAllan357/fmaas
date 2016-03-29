@@ -6,6 +6,8 @@
            (gnu.io NRSerialPort))
   (:require [fmaas.serial :as serial]))
 
+;(def system-sequencer (ref (MidiSystem/getSequncer false)))
+
 (defn play-song [midiFile]
   (let [sequencer (MidiSystem/getSequencer false) 
         transmitter (.getTransmitter sequencer)
