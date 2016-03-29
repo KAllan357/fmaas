@@ -15,11 +15,12 @@
 
 (defn play-handler [req]
   (let [song-files (songs/get-song-files)]
-    ;(println song-files)
-    (sequencer/play-song (first song-files))))
+    (sequencer/play-song (first song-files)))
+  "playing...")
 
 (defn stop-handler [req]
-  (str "stop"))
+  (sequencer/stop-song)
+  "stopped...")
 
 (defn reset-handler [req]
   (str "reset"))
