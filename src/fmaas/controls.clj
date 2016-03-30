@@ -2,16 +2,8 @@
   (:require [fmaas.sequencer :as sequencer]
             [fmaas.songs :as songs]))
 
-(def playing nil)
-
-(defn get-playing []
-  playing)
-
-(defn set-playing [s]
-  (def playing s))
-
 (defn status-handler [req]
-  (str "status"))
+  {:status 200 :headers {"Content-Type" "application/json"} :body (str (sequencer/get-status))})
 
 (defn play-handler [req]
   (let [song-files (songs/get-song-files)]
