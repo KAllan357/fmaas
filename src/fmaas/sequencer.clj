@@ -4,7 +4,8 @@
                              Transmitter
                              Receiver)
            (gnu.io NRSerialPort))
-  (:require [fmaas.serial :as serial]))
+  (:require [fmaas.serial :as serial]
+            [fmaas.util.duration :as duration]))
 
 ; system-sequencer is a shared reference to the MidiSystem Sequencer
 (def system-sequencer (ref (MidiSystem/getSequencer false)))
@@ -42,7 +43,9 @@
     sequencer))
 
 (defn get-sequence-details [sequence]
-  (bean sequence))
+  (let [sequence-length (.getMicrosecondLength sequence)]
+    {:length (duration/duration-string sequence-length)
+     :path (.getAbsolutePath sequence)}))
 
 (defn get-status []
   (let [sequencer @system-sequencer]
