@@ -1,0 +1,5 @@
+{:nomad/environments
+  {"dev"
+  	{:fizz "buzz"}
+   "prod"
+  	{:fuzz "bizz"}}}

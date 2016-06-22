@@ -10,6 +10,7 @@
   				 [http-kit "2.1.19"]
   				 [com.moppy/moppydesk "1.0.0"]
                                  [nrjavaserial/nrjavaserial "3.9.3"]
+                                 [jarohen/nomad "0.7.2"]
   				 [javax.servlet/servlet-api "2.5"]
   				 [ring/ring-devel "1.4.0"]
   				 [ring/ring-core "1.4.0"]]
@@ -17,5 +18,7 @@
   :target-path "target/%s"
   :profiles {:dev
              {:dependencies
-              [[javax.servlet/servlet-api "2.5"]]}}
+              [[javax.servlet/servlet-api "2.5"]]}
+             :jvm-opts ["-Dnomad.env=dev"]}
+  :resource-paths ["src/resources"]
   :aot [fmaas.core])
