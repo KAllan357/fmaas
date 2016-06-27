@@ -2,9 +2,9 @@
   (:require [nomad :refer [defconfig]]
             [clojure.java.io :as io]))
 
-(defconfig my-config (io/resource "default-config.edn"))
+(defconfig config (io/resource "default-config.edn"))
 
-(def fizz (:fizz my-config))
+(def get-config (config))
 
 ; FMAAS_HOME == "Where are my songs?"
 ; Com Port == "Where is my Arduino? COM3"
