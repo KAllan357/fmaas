@@ -1,10 +1,10 @@
 (ns fmaas.core
   (:gen-class)
-  (:use [compojure.route :only [files not-found]]
-        [compojure.handler :only [site]]
-  	[compojure.core :only [defroutes GET POST DELETE ANY context]]
-        org.httpkit.server)
   (:require [fmaas.endpoints :as endpoints]
+            [fmaas.config.config :as config]
+            [compojure.core :refer [defroutes]]
+            [compojure.handler :refer [site]]
+            [org.httpkit.server :refer [run-server]]
             [ring.middleware.reload :as reload]))
 
 (defn in-dev? []
@@ -18,5 +18,5 @@
   (let [handler (if (in-dev?)
                   (reload/wrap-reload (site #'all-routes)) ;; only reload when dev
                   (site all-routes))]
-    (run-server handler {:port 8080})))
+    (run-server handler {:port (:port config/get-config)})))
 
