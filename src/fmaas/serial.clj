@@ -16,3 +16,11 @@
       (catch Exception exception
         (println exception)))))
 
+(defn connect-serial-connection [connection]
+  (try
+    (.connect connection)
+    (if (.isConnected connection)
+      connection (println "error not connected"))
+    (catch Exception exception
+      (println exception))))
+
