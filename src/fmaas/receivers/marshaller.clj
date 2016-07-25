@@ -49,4 +49,3 @@
 ;   read :channels
 ;     - for each we make a Map {:1 object[]}
 ;   return a Reciever that can send() close() - both delegate to the 2nd Map in this comment
-
