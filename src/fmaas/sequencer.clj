@@ -5,7 +5,8 @@
                              Receiver)
            (gnu.io NRSerialPort))
   (:require [fmaas.serial :as serial]
-            [fmaas.util.duration :as duration]))
+            [fmaas.util.duration :as duration]
+            [fmaas.receivers.marshaller :as marshaller]))
 
 ; system-sequencer is a shared reference to the MidiSystem Sequencer
 (def system-sequencer (ref (MidiSystem/getSequencer false)))

@@ -1,4 +1,5 @@
 (ns fmaas.receivers.floppy-drive-test
+  (:import (javax.sound.midi ShortMessage))
   (:require [clojure.test :refer :all]
             [fmaas.receivers.floppy-drive :refer :all]))
 
@@ -25,3 +26,15 @@
     (is (pitch-bend? 235))
     (is (false? (pitch-bend? 240)))
     (is (false? (pitch-bend? 1999)))))
+
+(deftest test-get-pitch-bend
+  (testing "Calculates a pitch-bend message into a value useful for floppys"
+    (let [message (ShortMessage.)]
+      (is (= 16320 (get-pitch-bend message))))))
+
+(deftest test-pitch-bend-period
+  (testing "Soemthing"
+    (let [message (ShortMessage. 227 10 10)
+          p 16320]
+      (is (set-current-period 3 3)
+          (= 2 (pitch-bend-period message p))))))

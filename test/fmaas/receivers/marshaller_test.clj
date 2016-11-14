@@ -12,6 +12,11 @@
 ;      (is (instance? javax.sound.midi.Receiver (:receiver (:COM3 r))))
       )))
 
+(deftest test-channel-to-keyword
+  (testing "Converts a channel to a keyword for map access"
+    (is (= :1 (channel-to-keyword 1)))
+    (is (= :999 (channel-to-keyword 999)))))
+
 (deftest test-parse-receiver-type-pass-through
   (testing "A PassThrough type yields a javax.sound.midi.Receiver interface"
     (is (instance? javax.sound.midi.Receiver (parse-receiver-type "PassThrough" "fake thing")))))

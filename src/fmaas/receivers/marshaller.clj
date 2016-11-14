@@ -12,12 +12,15 @@
 
 (defn map-receivers [kv]
   (let [serial-connection (serial/make-connection (val kv))]
-    (vector (key kv) {:connection serial-connection 
+    (vector (key kv) {:serial-connection serial-connection 
                       :receiver (parse-receiver-type (:type (val kv) serial-connection) serial-connection)})))
 
 ; {:COM3 {:serial-connection object[] :receiver object[]}
 (defn make-receivers [receivers-conf]
   (into {} (map map-receivers receivers-conf)))
+
+(defn channel-to-keyword [channel]
+  (keyword (str channel)))
 
 (defn marshaller-receiver
   "Returns a reified javax.sound.midi.Receiver that uses the current config to map channels to a 
@@ -31,13 +34,14 @@
         channels-conf (:channels conf)]
     (reify javax.sound.midi.Receiver
       (close [this]
-        ; What happens if I close an already closed entry? Does it matter?
-        (doseq [keyval channels-conf]
-          (.close (.getOutputStream (val keyval)))
-          (.disconnect (val keyval))))
+        ; Call close on each receiver
+        (doseq [keyval receivers]
+          (.close (:receiver (val keyval)))))
       (send [this message timestamp]
-        ; Call send on the appropriate channel
-        ))))
+        (let [channel-kw (channel-to-keyword (.getChannel message))
+              receiver-key (channel-kw channels-conf)
+              receiver (:receiver (receiver-key receivers))]
+          (.send receiver message timestamp))))))
 
 ;(defn close [this] (doseq [keyval my-map] (.close (.getOutputStream (val keyval))) (.disconnect (val keyval))))
 
