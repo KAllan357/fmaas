@@ -5,7 +5,8 @@
             [compojure.core :refer [defroutes]]
             [compojure.handler :refer [site]]
             [org.httpkit.server :refer [run-server]]
-            [ring.middleware.reload :as reload]))
+            [ring.middleware.reload :as reload]
+            [ring.middleware.logger :as logger]))
 
 (defn in-dev? []
 	(not (nil? (System/getenv "FMAAS_DEV"))))
@@ -18,5 +19,4 @@
   (let [handler (if (in-dev?)
                   (reload/wrap-reload (site #'all-routes)) ;; only reload when dev
                   (site all-routes))]
-    (run-server handler {:port (:port config/get-config)})))
-
+    (run-server (logger/wrap-with-logger handler) {:port (:port config/get-config)})))
