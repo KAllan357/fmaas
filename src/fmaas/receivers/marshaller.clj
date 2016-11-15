@@ -1,6 +1,7 @@
 (ns fmaas.receivers.marshaller
   (:require [fmaas.config.config :as config]
             [fmaas.receivers.pass-through :as pass-through]
+            [fmaas.receivers.floppy-drive :as floppy-drive]
             [fmaas.serial :as serial]))
 
 (defn parse-receiver-type
@@ -8,10 +9,11 @@
   [type serial-connection]
   (condp = type
     "PassThrough" (pass-through/pass-through serial-connection)
+    "FloppyDrive" (floppy-drive/floppy-drive serial-connection)
     (str "uh oh?")))
 
 (defn map-receivers [kv]
-  (let [serial-connection (serial/make-connection (val kv))]
+  (let [serial-connection (serial/make-serial-connection (val kv))]
     (vector (key kv) {:serial-connection serial-connection 
                       :receiver (parse-receiver-type (:type (val kv) serial-connection) serial-connection)})))
 

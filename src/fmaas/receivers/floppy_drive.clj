@@ -117,7 +117,9 @@
 
 (defn floppy-drive [serial-connection]
   (reify javax.sound.midi.Receiver
-    (close [this])
+    (close [this]
+      (.close (.getOutputStream serial-connection))
+      (.disconnect serial-connection))
     (send [this message timestamp]
       (let [dispatch-fn (dispatch-message message)]
         (when dispatch-fn

@@ -1,26 +1,23 @@
-(ns fmaas.serial)
+(ns fmaas.serial
+  (:import gnu.io.NRSerialPort))
 
 (defn make-connection
   ""
   [config]
-  (gnu.io.NRSerialPort. (:comPort config) (:baud config)))
-
-(defn make-serial-connection
-  "Makes"
-  [config]
-  (let [connection (make-connection config)]
-    (try
-      (.connect connection)
-      (if (.isConnected connection)
-        connection (println "error not connected"))
-      (catch Exception exception
-        (println exception)))))
+  (NRSerialPort. (:comPort config) (:baud config)))
 
 (defn connect-serial-connection [connection]
+  "Attempts to connect to the given connection"
   (try
     (.connect connection)
     (if (.isConnected connection)
-      connection (println "error not connected"))
+      connection
+      (throw (Exception. "cannot connect")))
     (catch Exception exception
       (println exception))))
 
+(defn make-serial-connection
+  "Makes a serial connection and attempts to connect"
+  [config]
+  (let [connection (make-connection config)]
+    (connect-serial-connection connection)))
