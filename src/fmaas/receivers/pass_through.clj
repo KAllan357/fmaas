@@ -7,4 +7,3 @@
       (.disconnect serial-connection))
     (send [this message timestamp]
       (.write (.getOutputStream serial-connection) (.getMessage message)))))
-
