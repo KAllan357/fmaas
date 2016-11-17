@@ -5,7 +5,7 @@
             :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :plugins [[lein-localrepo "0.5.3"]
             [lein-ring "0.9.7"]]
-  :ring {:handler fmaas.core/all-routes
+  :ring {:handler fmaas.core/api
          :port 8080
          :nrepl {:start? true}}
   :dependencies [[org.clojure/clojure "1.8.0"]
@@ -17,8 +17,8 @@
                  [nrjavaserial/nrjavaserial "3.9.3"]
                  [jarohen/nomad "0.7.2"]
                  [javax.servlet/servlet-api "2.5"]
-                 [ring/ring-devel "1.5.0"]
                  [ring/ring-core "1.5.0"]
+                 [ring/ring-defaults "0.2.1"]
                  [ring.middleware.logger "0.5.0"]]
   :main fmaas.core
   :target-path "target/%s"

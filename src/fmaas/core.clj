@@ -3,18 +3,19 @@
   (:require [fmaas.endpoints :as endpoints]
             [fmaas.config.config :as config]
             [compojure.core :refer [defroutes]]
-            [compojure.handler :refer [site]]
             [org.httpkit.server :refer [run-server]]
-            [ring.middleware.reload :as reload]
-            [ring.middleware.logger :as logger]))
-
-(defn in-dev? []
-	(not (nil? (System/getenv "FMAAS_DEV"))))
+            [ring.middleware.logger :as logger]
+            [ring.middleware.defaults :refer :all]))
 
 (defroutes all-routes
   (endpoints/all))
 
+(def api
+  (let [handler all-routes]
+    (-> handler
+        (wrap-defaults api-defaults)
+        (logger/wrap-with-logger))))
+
 (defn -main [& args]
   "Main function for starting the server as an uberjar."
-  (let [handler (site all-routes)]
-    (run-server (logger/wrap-with-logger handler) {:port (:port config/get-config)})))
+  (run-server api {:port (:port config/get-config)}))
