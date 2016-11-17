@@ -16,7 +16,5 @@
 
 (defn -main [& args]
   "Main function for starting the server as an uberjar."
-  (let [handler (if (in-dev?)
-                  (reload/wrap-reload (site #'all-routes)) ;; only reload when dev
-                  (site all-routes))]
+  (let [handler (site all-routes)]
     (run-server (logger/wrap-with-logger handler) {:port (:port config/get-config)})))
