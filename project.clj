@@ -19,7 +19,8 @@
                  [javax.servlet/servlet-api "2.5"]
                  [ring/ring-core "1.5.0"]
                  [ring/ring-defaults "0.2.1"]
-                 [ring.middleware.logger "0.5.0"]]
+                 [ring.middleware.logger "0.5.0"]
+                 [ring/ring-json "0.4.0"]]
   :main fmaas.core
   :target-path "target/%s"
   :profiles {:dev

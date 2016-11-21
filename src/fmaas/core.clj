@@ -5,7 +5,8 @@
             [compojure.core :refer [defroutes]]
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.logger :as logger]
-            [ring.middleware.defaults :refer :all]))
+            [ring.middleware.defaults :refer :all]
+            [ring.middleware.json :as json]))
 
 (defroutes all-routes
   (endpoints/all))
@@ -13,8 +14,9 @@
 (def api
   (let [handler all-routes]
     (-> handler
-        (wrap-defaults api-defaults)
-        (logger/wrap-with-logger))))
+        (wrap-defaults (assoc-in api-defaults [:responses :content-types] false))
+        (logger/wrap-with-logger)
+        (json/wrap-json-response))))
 
 (defn -main [& args]
   "Main function for starting the server as an uberjar."
