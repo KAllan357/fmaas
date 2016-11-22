@@ -1,14 +1,28 @@
 (ns fmaas.config.config
-  (:require [nomad :refer [defconfig]]
-            [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [clojure.edn :as edn]
+            [environ.core :refer [env]]
+            [ring.util.response :as response]))
 
-(defconfig config (io/resource "default-config.edn"))
+(def data-readers {'fmaas/songs-files #(file-seq (io/file %1))
+                   'fmaas/songs-resources #(file-seq (io/resource %1))
+                   'fmaas/song-file io/file
+                   'fmaas/song-resource io/resource})
 
-(def get-config (config))
+(def config (atom {}))
 
-; FMAAS_HOME == "Where are my songs?"
-; Com Port == "Where is my Arduino? COM3"
-; Baud == "What baud is my Arduino at? 9600"
-; Port == "What port should I start my webserver on? 8080"
-; fix in-dev? in core.clj
+(defn set-config
+  ([] (set-config (io/resource (env :config-file))))
+  ([resource-or-file]
+    (with-open [rdr (java.io.PushbackReader. (io/reader resource-or-file))]
+      (swap! config (fn [n] (edn/read {:readers data-readers} rdr))))))
 
+(defn get-config []
+  (if (empty? @config)
+    (set-config))
+  @config)
+
+(defn get-config-handler [req]
+  (response/response (get-config)))
+
+(defn put-config-handler [req])

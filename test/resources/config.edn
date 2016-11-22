@@ -1,9 +1,8 @@
 {
   :port 8080
-  :songs #fmaas/songs-files "/Users/kallan/songs"
+  :songs #fmaas/song-resource "Bubbleman.mid"
   :receivers {
-    :COM3 {:type "PassThrough" :baud 9600 :comPort "COM3"}
-  }
+    :COM3 {:type "PassThrough" :baud 9600 :comPort "COM3"}}
   :channels {
     :1 :COM3
     :2 :COM3
